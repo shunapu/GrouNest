@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="好きなことからつながる、あなたのコミュニティ。GrouNestで仲間を見つけよう。"
+    />
+    <title>GrouNest — 好きなことから、つながろう</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="メインメニュー">
+        <a class="brand" href="#" aria-label="GrouNest ホーム">
+          <span class="brand-mark" aria-hidden="true">g</span>
+          <span>GrouNest</span>
+        </a>
+
+        <button class="profile-switcher" type="button">
+          <span class="avatar avatar-you">Y</span>
+          <span class="profile-copy">
+            <strong>Yuki Tanaka</strong>
+            <small>マイプロフィール</small>
+          </span>
+          <span class="switcher-arrow" aria-hidden="true">⌄</span>
+        </button>
+
+        <nav class="primary-nav" aria-label="ページ">
+          <a class="nav-link is-active" href="#feed" data-view="feed">
+            <span class="nav-icon" aria-hidden="true">⌂</span>ホーム
+          </a>
+          <a class="nav-link" href="#discover" data-view="discover">
+            <span class="nav-icon" aria-hidden="true">⌕</span>見つける
+          </a>
+          <a class="nav-link" href="#events" data-view="events">
+            <span class="nav-icon" aria-hidden="true">▦</span>イベント
+            <span class="nav-count">2</span>
+          </a>
+          <a class="nav-link" href="#messages" data-view="messages">
+            <span class="nav-icon" aria-hidden="true">▱</span>メッセージ
+          </a>
+        </nav>
+
+        <div class="sidebar-section">
+          <div class="sidebar-heading">
+            <span>参加中のコミュニティ</span>
+            <button class="icon-button small" type="button" aria-label="コミュニティを追加" data-view="discover">＋</button>
+          </div>
+          <div class="joined-communities" id="joined-communities"></div>
+        </div>
+
+        <div class="sidebar-bottom">
+          <a class="nav-link" href="#settings" data-view="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span>設定
+          </a>
+          <div class="sidebar-note">
+            <span class="note-icon" aria-hidden="true">✦</span>
+            <p>好きなことを、<br />好きな人たちと。</p>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand">
+            <span class="brand-mark" aria-hidden="true">g</span>
+            <span>GrouNest</span>
+          </div>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="コミュニティや投稿を検索..." aria-label="コミュニティや投稿を検索" />
+            <kbd>⌘ K</kbd>
+          </label>
+          <div class="topbar-actions">
+            <button class="icon-button notification-button" type="button" aria-label="通知">
+              ♧<span class="notification-dot"></span>
+            </button>
+            <button class="avatar avatar-you topbar-avatar" type="button" aria-label="プロフィール">Y</button>
+          </div>
+        </header>
+
+        <div class="page-layout">
+          <section class="feed-column" id="feed">
+            <div class="welcome-row">
+              <div>
+                <p class="eyebrow" id="today-label"></p>
+                <h1>おかえりなさい、Yuki <span aria-hidden="true">👋</span></h1>
+                <p class="welcome-subtitle">今日も、好きなことからつながろう。</p>
+              </div>
+              <button class="button button-primary" id="open-composer" type="button">
+                <span aria-hidden="true">＋</span> 投稿する
+              </button>
+            </div>
+
+            <section class="hero-card" aria-label="GrouNestへようこそ">
+              <div class="hero-copy">
+                <span class="hero-label"><span aria-hidden="true">✦</span> あなたの「好き」が集まる場所</span>
+                <h2>好きなことから、<br />つながろう。</h2>
+                <p>同じ興味を持つ仲間と出会って、<br class="desktop-break" />毎日をもっと楽しく。</p>
+                <a href="#discover" class="hero-link" data-view="discover">コミュニティを見つける <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="hero-art" aria-hidden="true">
+                <div class="art-orbit orbit-one"></div>
+                <div class="art-orbit orbit-two"></div>
+                <span class="art-spark spark-one">✦</span>
+                <span class="art-spark spark-two">✳</span>
+                <span class="art-emoji emoji-one">🌿</span>
+                <span class="art-emoji emoji-two">☕</span>
+                <span class="art-emoji emoji-three">📷</span>
+                <span class="art-emoji emoji-four">🎨</span>
+                <span class="art-center">g</span>
+              </div>
+            </section>
+
+            <section class="community-strip" aria-labelledby="communities-title">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">あなたへのおすすめ</p>
+                  <h2 id="communities-title">新しいコミュニティ</h2>
+                </div>
+                <a href="#discover" class="text-link" data-view="discover">すべて見る <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="community-cards" id="community-cards"></div>
+            </section>
+
+            <section class="posts-section" aria-labelledby="posts-title">
+              <div class="section-heading post-heading">
+                <div>
+                  <p class="eyebrow">コミュニティの今</p>
+                  <h2 id="posts-title">みんなの投稿</h2>
+                </div>
+                <div class="feed-filters" role="group" aria-label="投稿の表示順">
+                  <button class="filter-button is-selected" type="button" data-filter="おすすめ">おすすめ</button>
+                  <button class="filter-button" type="button" data-filter="新着">新着</button>
+                </div>
+              </div>
+              <div class="post-list" id="post-list"></div>
+              <p class="empty-state" id="empty-state" hidden>検索に一致する投稿が見つかりませんでした。</p>
+            </section>
+          </section>
+
+          <aside class="right-column" aria-label="おすすめ情報">
+            <section class="side-card event-card" id="events">
+              <div class="side-card-heading">
+                <div>
+                  <p class="eyebrow">次の予定</p>
+                  <h2>近日開催のイベント</h2>
+                </div>
+                <button class="icon-button small" type="button" aria-label="イベント一覧を見る">→</button>
+              </div>
+              <div class="event-item">
+                <div class="event-date"><strong>15</strong><span>6月</span></div>
+                <div class="event-details">
+                  <strong>週末の朝活フォトウォーク</strong>
+                  <span>📷 写真とカメラ好き · 09:00</span>
+                  <small>参加予定 12人</small>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-date date-lilac"><strong>18</strong><span>6月</span></div>
+                <div class="event-details">
+                  <strong>お気に入りの本を語る会</strong>
+                  <span>📚 本と読書 · 20:00</span>
+                  <small>参加予定 8人</small>
+                </div>
+              </div>
+              <a class="side-card-link" href="#events">イベントをもっと見る <span aria-hidden="true">→</span></a>
+            </section>
+
+            <section class="side-card people-card">
+              <div class="side-card-heading">
+                <div>
+                  <p class="eyebrow">新しい出会い</p>
+                  <h2>おすすめメンバー</h2>
+                </div>
+                <button class="icon-button small" type="button" aria-label="メンバーをもっと見る">···</button>
+              </div>
+              <div class="person-row">
+                <span class="avatar person-avatar avatar-coral">A</span>
+                <span class="person-info"><strong>あかり</strong><small>写真・カフェ巡り</small></span>
+                <button class="follow-button" type="button" aria-label="あかりをフォロー">＋</button>
+              </div>
+              <div class="person-row">
+                <span class="avatar person-avatar avatar-blue">K</span>
+                <span class="person-info"><strong>Kenji</strong><small>登山・キャンプ</small></span>
+                <button class="follow-button" type="button" aria-label="Kenjiをフォロー">＋</button>
+              </div>
+              <div class="person-row">
+                <span class="avatar person-avatar avatar-yellow">M</span>
+                <span class="person-info"><strong>みさき</strong><small>読書・映画</small></span>
+                <button class="follow-button" type="button" aria-label="みさきをフォロー">＋</button>
+              </div>
+            </section>
+
+            <section class="quote-card">
+              <span class="quote-mark" aria-hidden="true">“</span>
+              <p>共通の「好き」があるだけで、会話ってこんなに弾むんだ。</p>
+              <span>— コミュニティメンバーの声</span>
+              <div class="quote-decoration" aria-hidden="true">✿</div>
+            </section>
+          </aside>
+        </div>
+        <footer class="site-footer">© 2025 GrouNest <span>·</span> 好きなことから、つながろう。</footer>
+      </main>
+    </div>
+
+    <dialog class="composer-dialog" id="composer-dialog" aria-labelledby="composer-title">
+      <form id="composer-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">コミュニティにシェア</p>
+            <h2 id="composer-title">投稿を作成</h2>
+          </div>
+          <button class="icon-button" id="close-composer" type="button" aria-label="閉じる">×</button>
+        </div>
+        <label class="composer-community">
+          <span class="avatar community-avatar garden-avatar" aria-hidden="true">🌿</span>
+          <span><strong>週末ガーデニング部</strong><small>に投稿</small></span>
+          <span class="switcher-arrow" aria-hidden="true">⌄</span>
+        </label>
+        <label class="sr-only" for="post-text">投稿内容</label>
+        <textarea id="post-text" name="post" placeholder="最近あったことや、みんなに聞いてみたいことを書いてみよう..." maxlength="500" required></textarea>
+        <div class="composer-footer">
+          <span id="character-count">0 / 500</span>
+          <button class="button button-primary" type="submit">投稿する <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
