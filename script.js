@@ -1,35 +1,35 @@
 const communities = [
   {
-    id: "garden",
-    name: "週末ガーデニング部",
+    id: "habits",
+    name: "朝活・習慣づくり",
     emoji: "🌿",
-    theme: "garden-avatar",
-    members: 128,
-    description: "ベランダ菜園からお庭づくりまで、植物のある暮らしを楽しもう。",
+    theme: "habit-avatar",
+    members: 18,
+    description: "無理のない小さな習慣を、仲間と一緒に続けてみませんか。",
   },
   {
-    id: "camera",
-    name: "写真とカメラ好き",
-    emoji: "📷",
-    theme: "camera-avatar",
-    members: 246,
-    description: "何気ない日常も旅先の景色も。写真好きが集まる場所です。",
+    id: "design",
+    name: "ゆるく学ぶデザイン",
+    emoji: "🎨",
+    theme: "design-avatar",
+    members: 24,
+    description: "初めてでも大丈夫。気づきや作品を持ち寄って学び合う場所。",
   },
   {
-    id: "books",
-    name: "本と読書",
+    id: "reading",
+    name: "本から学び合う読書会",
     emoji: "📚",
-    theme: "book-avatar",
-    members: 89,
-    description: "最近読んだ本や心に残った一冊について語りませんか？",
+    theme: "reading-avatar",
+    members: 16,
+    description: "心に残った一節や学びをシェアして、ゆっくり深めよう。",
   },
   {
-    id: "coffee",
-    name: "カフェ時間",
-    emoji: "☕",
-    theme: "coffee-avatar",
-    members: 174,
-    description: "お気に入りのカフェや、おうちコーヒーをシェアしよう。",
+    id: "challenge",
+    name: "小さな挑戦ラボ",
+    emoji: "✨",
+    theme: "challenge-avatar",
+    members: 12,
+    description: "やってみたいことを宣言して、応援し合いながら一歩ずつ。",
   },
 ];
 
@@ -39,9 +39,9 @@ const posts = [
     author: "Mika Sato",
     initial: "M",
     avatarClass: "avatar-coral",
-    community: "週末ガーデニング部",
+    community: "朝活・習慣づくり",
     time: "2時間前",
-    content: "ベランダのバジルがこんなに大きくなりました🌱 朝に葉っぱを摘んでパスタにするのが最近の楽しみ。みなさんは何を育てていますか？",
+    content: "今週は朝10分の読書を続けられました🌱 小さくてもできたことを報告できる場所があると、次の日も机に向かえます。みんなの小さな一歩も聞かせてください。",
     image: "🪴",
     imageClass: "",
     likes: 24,
@@ -53,11 +53,11 @@ const posts = [
     author: "Ryo Nakamura",
     initial: "R",
     avatarClass: "avatar-blue",
-    community: "カフェ時間",
+    community: "ゆるく学ぶデザイン",
     time: "5時間前",
-    content: "下北沢で見つけた小さなコーヒースタンド。深煎りのラテと焼きたてのスコーンが最高でした☕ ほっとひと息つきたい日におすすめです。",
-    image: "☕",
-    imageClass: "coffee-scene",
+    content: "はじめて作ったバナーをみんなに見てもらいました🎨 自分では気づかなかった良いところも教えてもらえて、次も作ってみようと思えます。",
+    image: "🎨",
+    imageClass: "design-scene",
     likes: 18,
     comments: 4,
     liked: false,
@@ -67,9 +67,9 @@ const posts = [
     author: "Yuna",
     initial: "Y",
     avatarClass: "avatar-yellow",
-    community: "本と読書",
+    community: "本から学び合う読書会",
     time: "昨日",
-    content: "今月読んでよかった一冊。読み終わったあと、いつもの景色が少し違って見えるような本でした📖 次に読む本を探しているので、おすすめがあればぜひ教えてください！",
+    content: "今月の目標だった一冊を読み終えました📖 気になったところを話していたら、同じ本でも受け取り方が違っておもしろい。次はみんなのおすすめも読んでみます。",
     image: "📚",
     imageClass: "books-scene",
     likes: 31,
@@ -78,7 +78,7 @@ const posts = [
   },
 ];
 
-const joinedCommunityIds = new Set(["garden", "camera", "books"]);
+const joinedCommunityIds = new Set(["habits", "design", "reading"]);
 const postList = document.querySelector("#post-list");
 const communityCards = document.querySelector("#community-cards");
 const joinedCommunities = document.querySelector("#joined-communities");
@@ -89,8 +89,11 @@ const composerForm = document.querySelector("#composer-form");
 const postText = document.querySelector("#post-text");
 const characterCount = document.querySelector("#character-count");
 const toast = document.querySelector("#toast");
+const profileImageInput = document.querySelector("#profile-image-input");
+const profileImageStorageKey = "grouNest.profileImage";
 let activeFilter = "おすすめ";
 let toastTimeout;
+let profileImageData = "";
 
 function makeElement(tagName, className, text) {
   const element = document.createElement(tagName);
@@ -104,6 +107,67 @@ function showToast(message) {
   toast.classList.add("is-visible");
   window.clearTimeout(toastTimeout);
   toastTimeout = window.setTimeout(() => toast.classList.remove("is-visible"), 2600);
+}
+
+function applyProfileImage(avatar) {
+  if (!profileImageData) return;
+  avatar.textContent = "";
+  avatar.style.backgroundImage = `url("${profileImageData}")`;
+  avatar.style.backgroundPosition = "center";
+  avatar.style.backgroundSize = "cover";
+}
+
+function saveProfileImage(imageData) {
+  profileImageData = imageData;
+  document.querySelectorAll(".avatar-you").forEach(applyProfileImage);
+
+  try {
+    window.localStorage.setItem(profileImageStorageKey, imageData);
+    showToast("プロフィール画像を変更しました");
+  } catch {
+    showToast("画像は変更しましたが、このブラウザーには保存できませんでした");
+  }
+}
+
+function resizeProfileImage(file) {
+  return new Promise((resolve, reject) => {
+    const imageUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(imageUrl);
+      try {
+        const scale = Math.min(1, 512 / Math.max(image.naturalWidth, image.naturalHeight));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        const context = canvas.getContext("2d");
+        if (!context) {
+          reject(new Error("画像を処理できませんでした"));
+          return;
+        }
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("画像を圧縮できませんでした"));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error("画像を読み込めませんでした"));
+          reader.readAsDataURL(blob);
+        }, "image/jpeg", 0.82);
+      } catch {
+        reject(new Error("画像を処理できませんでした"));
+      }
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(imageUrl);
+      reject(new Error("この画像ファイルを開けませんでした"));
+    };
+    image.src = imageUrl;
+  });
 }
 
 function renderCommunities() {
@@ -171,6 +235,7 @@ function renderPosts() {
     const author = makeElement("div", "post-author");
     const avatar = makeElement("span", `avatar ${post.avatarClass}`, post.initial);
     avatar.setAttribute("aria-hidden", "true");
+    if (post.avatarClass === "avatar-you") applyProfileImage(avatar);
     const meta = makeElement("div", "post-meta");
     meta.append(
       makeElement("strong", "", post.author),
@@ -216,7 +281,7 @@ function addPost(content) {
     author: "Yuki Tanaka",
     initial: "Y",
     avatarClass: "avatar-you",
-    community: "週末ガーデニング部",
+    community: "朝活・習慣づくり",
     time: "たった今",
     content,
     image: "",
@@ -263,6 +328,33 @@ document.querySelectorAll("[data-view]").forEach((link) => {
 document.querySelector("#open-composer").addEventListener("click", () => {
   composerDialog.showModal();
   postText.focus();
+});
+
+document.querySelectorAll(".profile-switcher, .topbar-avatar").forEach((button) => {
+  button.addEventListener("click", () => {
+    profileImageInput.value = "";
+    profileImageInput.click();
+  });
+});
+
+profileImageInput.addEventListener("change", async () => {
+  const [file] = profileImageInput.files;
+  if (!file) return;
+  if (!file.type.startsWith("image/") || file.type === "image/svg+xml") {
+    showToast("JPEG、PNG、WebPなどの画像ファイルを選択してください");
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("画像は10MB以下のファイルを選択してください");
+    return;
+  }
+
+  try {
+    const imageData = await resizeProfileImage(file);
+    saveProfileImage(imageData);
+  } catch (error) {
+    showToast(error.message);
+  }
 });
 
 document.querySelector("#close-composer").addEventListener("click", () => composerDialog.close());
@@ -314,6 +406,13 @@ document.addEventListener("keydown", (event) => {
     searchInput.focus();
   }
 });
+
+try {
+  profileImageData = window.localStorage.getItem(profileImageStorageKey) || "";
+} catch {
+  showToast("保存済みのプロフィール画像を読み込めませんでした");
+}
+document.querySelectorAll(".avatar-you").forEach(applyProfileImage);
 
 renderCommunities();
 renderPosts();
