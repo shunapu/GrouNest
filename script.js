@@ -91,9 +91,16 @@ const characterCount = document.querySelector("#character-count");
 const toast = document.querySelector("#toast");
 const profileImageInput = document.querySelector("#profile-image-input");
 const profileImageStorageKey = "grouNest.profileImage";
+const profileStorageKey = "grouNest.profile";
+const profileDialog = document.querySelector("#profile-dialog");
+const profileForm = document.querySelector("#profile-form");
+const profileNameInput = document.querySelector("#profile-name-input");
+const profileBioInput = document.querySelector("#profile-bio-input");
+const bioCharacterCount = document.querySelector("#bio-character-count");
 let activeFilter = "おすすめ";
 let toastTimeout;
 let profileImageData = "";
+let profile = { name: "Yuki Tanaka", bio: "" };
 
 function makeElement(tagName, className, text) {
   const element = document.createElement(tagName);
@@ -110,11 +117,22 @@ function showToast(message) {
 }
 
 function applyProfileImage(avatar) {
-  if (!profileImageData) return;
+  avatar.textContent = Array.from(profile.name.trim())[0] || "Y";
+  if (!profileImageData) {
+    avatar.style.backgroundImage = "";
+    return;
+  }
   avatar.textContent = "";
   avatar.style.backgroundImage = `url("${profileImageData}")`;
   avatar.style.backgroundPosition = "center";
   avatar.style.backgroundSize = "cover";
+}
+
+function renderProfile() {
+  document.querySelector("#sidebar-profile-name").textContent = profile.name;
+  document.querySelector("#sidebar-profile-bio").textContent = profile.bio || "マイプロフィール";
+  document.querySelector("#welcome-profile-name").textContent = profile.name;
+  document.querySelectorAll(".avatar-you").forEach(applyProfileImage);
 }
 
 function saveProfileImage(imageData) {
@@ -235,10 +253,13 @@ function renderPosts() {
     const author = makeElement("div", "post-author");
     const avatar = makeElement("span", `avatar ${post.avatarClass}`, post.initial);
     avatar.setAttribute("aria-hidden", "true");
-    if (post.avatarClass === "avatar-you") applyProfileImage(avatar);
+    if (post.isOwn) {
+      avatar.classList.add("avatar-you");
+      applyProfileImage(avatar);
+    }
     const meta = makeElement("div", "post-meta");
     meta.append(
-      makeElement("strong", "", post.author),
+      makeElement("strong", "", post.isOwn ? profile.name : post.author),
       makeElement("span", "", `${post.community} · ${post.time}`),
     );
     author.append(avatar, meta);
@@ -278,9 +299,10 @@ function renderPosts() {
 function addPost(content) {
   posts.unshift({
     id: Date.now(),
-    author: "Yuki Tanaka",
-    initial: "Y",
+    author: profile.name,
+    initial: Array.from(profile.name.trim())[0] || "Y",
     avatarClass: "avatar-you",
+    isOwn: true,
     community: "朝活・習慣づくり",
     time: "たった今",
     content,
@@ -332,9 +354,49 @@ document.querySelector("#open-composer").addEventListener("click", () => {
 
 document.querySelectorAll(".profile-switcher, .topbar-avatar").forEach((button) => {
   button.addEventListener("click", () => {
-    profileImageInput.value = "";
-    profileImageInput.click();
+    profileNameInput.value = profile.name;
+    profileBioInput.value = profile.bio;
+    bioCharacterCount.textContent = String(profile.bio.length);
+    profileDialog.showModal();
+    profileNameInput.focus();
   });
+});
+
+document.querySelector("#choose-profile-image").addEventListener("click", () => {
+  profileImageInput.value = "";
+  profileImageInput.click();
+});
+
+document.querySelector("#close-profile-dialog").addEventListener("click", () => profileDialog.close());
+document.querySelector("#cancel-profile-edit").addEventListener("click", () => profileDialog.close());
+profileDialog.addEventListener("click", (event) => {
+  if (event.target === profileDialog) profileDialog.close();
+});
+
+profileBioInput.addEventListener("input", () => {
+  bioCharacterCount.textContent = String(profileBioInput.value.length);
+});
+
+profileForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const name = profileNameInput.value.trim();
+  if (!name) {
+    showToast("名前を入力してください");
+    profileNameInput.focus();
+    return;
+  }
+
+  profile = { name, bio: profileBioInput.value.trim() };
+  renderProfile();
+  renderPosts();
+  try {
+    window.localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+    profileDialog.close();
+    showToast("プロフィールを更新しました");
+  } catch {
+    profileDialog.close();
+    showToast("プロフィールは更新しましたが、このブラウザーには保存できませんでした");
+  }
 });
 
 profileImageInput.addEventListener("change", async () => {
@@ -408,11 +470,28 @@ document.addEventListener("keydown", (event) => {
 });
 
 try {
+  const savedProfile = window.localStorage.getItem(profileStorageKey);
+  if (savedProfile) {
+    const parsedProfile = JSON.parse(savedProfile);
+    if (
+      parsedProfile &&
+      typeof parsedProfile.name === "string" &&
+      typeof parsedProfile.bio === "string" &&
+      parsedProfile.name.trim()
+    ) {
+      profile = { name: parsedProfile.name, bio: parsedProfile.bio };
+    }
+  }
+} catch {
+  showToast("保存済みのプロフィール情報を読み込めませんでした");
+}
+
+try {
   profileImageData = window.localStorage.getItem(profileImageStorageKey) || "";
 } catch {
   showToast("保存済みのプロフィール画像を読み込めませんでした");
 }
-document.querySelectorAll(".avatar-you").forEach(applyProfileImage);
+renderProfile();
 
 renderCommunities();
 renderPosts();

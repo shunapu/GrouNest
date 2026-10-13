@@ -25,11 +25,11 @@
           <span>GrouNest</span>
         </a>
 
-        <button class="profile-switcher" type="button" aria-label="プロフィール画像を変更">
+        <button class="profile-switcher" type="button" aria-label="プロフィールを編集">
           <span class="avatar avatar-you">Y</span>
           <span class="profile-copy">
-            <strong>Yuki Tanaka</strong>
-            <small>マイプロフィール</small>
+            <strong id="sidebar-profile-name">Yuki Tanaka</strong>
+            <small id="sidebar-profile-bio">マイプロフィール</small>
           </span>
           <span class="switcher-arrow" aria-hidden="true">⌄</span>
         </button>
@@ -84,7 +84,7 @@
             <button class="icon-button notification-button" type="button" aria-label="通知">
               ♧<span class="notification-dot"></span>
             </button>
-            <button class="avatar avatar-you topbar-avatar" type="button" aria-label="プロフィール画像を変更" title="プロフィール画像を変更">Y</button>
+            <button class="avatar avatar-you topbar-avatar" type="button" aria-label="プロフィールを編集" title="プロフィールを編集">Y</button>
           </div>
         </header>
 
@@ -93,7 +93,7 @@
             <div class="welcome-row">
               <div>
                 <p class="eyebrow" id="today-label"></p>
-                <h1>おかえりなさい、Yuki <span aria-hidden="true">👋</span></h1>
+                <h1>おかえりなさい、<span id="welcome-profile-name">Yuki</span> <span aria-hidden="true">👋</span></h1>
                 <p class="welcome-subtitle">学びも挑戦も、仲間と一緒に。</p>
               </div>
               <button class="button button-primary" id="open-composer" type="button">
@@ -232,6 +232,38 @@
         <div class="composer-footer">
           <span id="character-count">0 / 500</span>
           <button class="button button-primary" type="submit">投稿する <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </dialog>
+    <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+      <form class="profile-form" id="profile-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">あなたらしい居場所に</p>
+            <h2 id="profile-dialog-title">プロフィールを編集</h2>
+          </div>
+          <button class="icon-button" id="close-profile-dialog" type="button" aria-label="閉じる">×</button>
+        </div>
+        <div class="profile-image-control">
+          <span class="avatar avatar-you profile-preview">Y</span>
+          <div>
+            <strong>プロフィール画像</strong>
+            <p>あなたらしい写真を設定できます。</p>
+          </div>
+          <button class="button profile-image-button" id="choose-profile-image" type="button">画像を選ぶ</button>
+        </div>
+        <label class="profile-field" for="profile-name-input">
+          <span>名前</span>
+          <input id="profile-name-input" name="name" type="text" maxlength="40" autocomplete="name" required />
+        </label>
+        <label class="profile-field" for="profile-bio-input">
+          <span>自己紹介</span>
+          <textarea id="profile-bio-input" name="bio" maxlength="120" placeholder="好きなことや、仲間と挑戦したいことを書いてみましょう。"></textarea>
+          <small><span id="bio-character-count">0</span> / 120</small>
+        </label>
+        <div class="profile-form-footer">
+          <button class="button profile-cancel-button" id="cancel-profile-edit" type="button">キャンセル</button>
+          <button class="button button-primary" type="submit">変更を保存</button>
         </div>
       </form>
     </dialog>
